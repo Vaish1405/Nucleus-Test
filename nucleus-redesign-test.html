@@ -1,0 +1,1652 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>XR Training Portal</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --bg: #0b0c12;
+      --bg-2: #10121a;
+      --panel: rgba(14, 16, 24, 0.8);
+      --panel-2: rgba(18, 21, 31, 0.86);
+      --panel-3: rgba(12, 14, 22, 0.9);
+      --line: rgba(255, 255, 255, 0.12);
+      --line-soft: rgba(255, 255, 255, 0.08);
+      --text: #e9edf7;
+      --muted: #9aa4b9;
+      --gold: #ffbd59;
+      --gold-2: #ffbd59;
+      --purple: #2e145b;
+      --purple-2: #2e145b;
+      --lime: #8fdd59;
+      --lime-2: #6dbf35;
+      --danger: #f26b7a;
+      --shadow-soft: 0 8px 24px rgba(0, 0, 0, 0.3);
+      --shadow-strong: 0 20px 42px rgba(0, 0, 0, 0.45);
+      --glass-card-bg: #262a35;
+      --glass-card-border: rgba(236, 243, 255, 0.46);
+      --glass-card-shadow:
+        0 18px 36px rgba(0, 0, 0, 0.34),
+        0 0 28px rgba(46, 20, 91, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.22);
+      --selected-bg: rgba(46, 20, 91, 0.18);
+      --selected-text: #d8c7ff;
+      --selected-border: #2e145b;
+      --selected-ring: rgba(46, 20, 91, 0.4);
+      --glow-control:
+        0 0 0 1px rgba(46, 20, 91, 0.55),
+        0 0 0 4px rgba(46, 20, 91, 0.24),
+        0 0 18px rgba(46, 20, 91, 0.48),
+        0 0 30px rgba(134, 182, 255, 0.24),
+        inset 0 0 12px rgba(191, 214, 255, 0.12);
+      --glow-control-soft:
+        0 0 0 1px rgba(134, 182, 255, 0.28),
+        0 0 16px rgba(134, 182, 255, 0.24),
+        inset 0 0 12px rgba(191, 214, 255, 0.12);
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      min-height: 100vh;
+      font-family: "Manrope", "Segoe UI", sans-serif;
+      color: var(--text);
+      background: #0a0d14;
+      overflow-x: hidden;
+    }
+
+    .topbar {
+      width: 100%;
+      background:
+        linear-gradient(100deg, rgba(8, 8, 12, 0.95) 0%, rgba(26, 19, 41, 0.94) 52%, rgba(11, 12, 16, 0.95) 100%);
+      border-bottom: 1px solid rgba(255, 189, 89, 0.55);
+      box-shadow: 0 14px 32px rgba(0, 0, 0, 0.45);
+      position: sticky;
+      top: 0;
+      z-index: 10;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+    }
+
+    .topbar-inner {
+      max-width: 1500px;
+      margin: 0 auto;
+      padding: 10px 24px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 18px;
+    }
+
+    .brand {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 190px;
+    }
+
+    .logo {
+      width: 46px;
+      height: 46px;
+      border-radius: 10px;
+      display: grid;
+      place-items: center;
+      font-size: 1.3rem;
+      font-weight: 800;
+      color: #111;
+      background: linear-gradient(145deg, var(--gold-2), var(--gold));
+      border: 1px solid rgba(255, 225, 166, 0.55);
+      box-shadow: inset 0 0 0 1px rgba(255, 245, 215, 0.35), 0 0 20px rgba(255, 189, 89, 0.18);
+    }
+
+    .hello {
+      color: #f4f7ff;
+      font-size: 0.82rem;
+      line-height: 1.2;
+      font-weight: 700;
+      text-shadow: 0 1px 0 rgba(0, 0, 0, 0.45);
+    }
+
+    .nav-links {
+      flex: 1;
+      display: flex;
+      align-items: center;
+      gap: 20px;
+      justify-content: flex-start;
+    }
+
+    .nav-links a {
+      text-decoration: none;
+      color: rgba(242, 246, 255, 0.9);
+      font-size: clamp(0.84rem, 0.86vw, 0.95rem);
+      font-weight: 700;
+      padding: 10px 0;
+      border-bottom: 2px solid transparent;
+      transition: color 0.2s ease, border-color 0.2s ease;
+    }
+
+    .nav-links a:hover {
+      color: #ffffff;
+      border-bottom-color: rgba(255, 189, 89, 0.55);
+    }
+
+    .nav-links a.active {
+      color: #ffffff;
+      border-bottom-color: var(--gold);
+    }
+
+    .top-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .role-btn {
+      border: 1px solid #2e145b;
+      background: rgba(46, 20, 91, 0.96);
+      color: var(--lime);
+      border-radius: 999px;
+      padding: 8px 14px;
+      font-size: 0.86rem;
+      font-weight: 800;
+      box-shadow: 0 0 0 1px rgba(46, 20, 91, 0.28), 0 6px 16px rgba(46, 20, 91, 0.32);
+    }
+
+    .avatar {
+      width: 44px;
+      height: 44px;
+      border-radius: 50%;
+      overflow: hidden;
+      border: 1px solid rgba(255, 255, 255, 0.28);
+      background: radial-gradient(circle at 28% 25%, #f1dfec 0%, #b8c7db 45%, #4f617f 100%);
+      display: grid;
+      place-items: center;
+      font-weight: 800;
+      font-size: 0.78rem;
+      color: #fff;
+    }
+
+    .page {
+      max-width: 1500px;
+      margin: 0 auto;
+      padding: 34px 52px 56px;
+      display: grid;
+      gap: 20px;
+    }
+
+    .section {
+      border-radius: 16px;
+      padding: 16px;
+      border: 1px solid var(--glass-card-border);
+      box-shadow: var(--glass-card-shadow);
+      background: var(--glass-card-bg);
+      backdrop-filter: blur(20px) saturate(145%);
+      -webkit-backdrop-filter: blur(20px) saturate(145%);
+      position: relative;
+      overflow: hidden;
+      isolation: isolate;
+    }
+
+    .section::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: none;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .section > * {
+      position: relative;
+      z-index: 2;
+    }
+
+    .controls-section {
+      background: var(--glass-card-bg);
+      border-color: var(--glass-card-border);
+      box-shadow: var(--glass-card-shadow);
+    }
+
+
+    h1 {
+      font-size: clamp(1.55rem, 1.8vw, 2.15rem);
+      line-height: 1.1;
+      margin-bottom: 18px;
+      letter-spacing: -0.02em;
+      color: #f7e8be;
+    }
+
+    .toolbar {
+      display: grid;
+      grid-template-columns: auto 1fr auto;
+      align-items: center;
+      gap: 20px;
+      margin-bottom: 12px;
+    }
+
+    .toolbar-left,
+    .toolbar-center,
+    .toolbar-right {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      min-width: 0;
+    }
+
+    .toolbar-left { justify-self: start; }
+    .toolbar-center {
+      justify-self: center;
+      justify-content: center;
+      flex-wrap: wrap;
+    }
+    .toolbar-right { justify-self: end; }
+
+    .sort-select,
+    .pill-btn,
+    .action-btn,
+    .search-row button {
+      height: 44px;
+      border-radius: 10px;
+      border: 1px solid rgba(236, 243, 255, 0.26);
+      background: rgba(13, 18, 31, 0.9);
+      color: #edf3ff;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 700;
+      padding: 0 14px;
+    }
+
+    .controls-section button {
+      transition: background-color 0.18s ease, border-color 0.18s ease, color 0.18s ease, box-shadow 0.18s ease, transform 0.18s ease;
+      cursor: pointer;
+    }
+
+    .controls-section button:focus-visible {
+      outline: none;
+      box-shadow: var(--glow-control);
+    }
+
+    .controls-section button:hover {
+      background: rgba(13, 18, 31, 0.9);
+      color: #edf3ff;
+      box-shadow: var(--glow-control-soft);
+      transform: translateY(-1px);
+    }
+
+    .sort-select {
+      min-width: 320px;
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23ffbd59' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-position: calc(100% - 14px) 50%;
+      background-size: 10px 7px;
+      background-repeat: no-repeat;
+      padding-right: 36px;
+      color: #f1f3fa;
+      box-shadow: inset 0 0 0 1px rgba(191, 214, 255, 0.06);
+    }
+
+    .sort-select:hover,
+    .sort-select:focus {
+      box-shadow: var(--glow-control);
+      outline: none;
+    }
+
+    .pill-btn {
+      min-width: 120px;
+      text-align: center;
+    }
+
+    .pill-btn.active,
+    .controls-section button.is-selected {
+      background: var(--selected-bg);
+      color: var(--selected-text);
+      border-color: var(--selected-border);
+      box-shadow:
+        inset 0 0 0 1px var(--selected-ring),
+        0 0 14px rgba(46, 20, 91, 0.32),
+        0 0 24px rgba(46, 20, 91, 0.18);
+    }
+
+    .controls-section .state-btn.is-selected:hover,
+    .controls-section .state-btn.is-selected:focus-visible {
+      background: var(--selected-bg);
+      color: var(--selected-text);
+      border-color: var(--selected-border);
+      box-shadow:
+        inset 0 0 0 1px var(--selected-ring),
+        0 0 14px rgba(46, 20, 91, 0.32),
+        0 0 24px rgba(46, 20, 91, 0.18);
+      transform: none;
+    }
+
+    .filter-btn {
+      position: relative;
+      min-width: 120px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+    }
+
+    .filter-btn .count {
+      position: absolute;
+      top: -7px;
+      right: -5px;
+      width: 24px;
+      height: 24px;
+      border-radius: 50%;
+      background: var(--gold-2);
+      color: #191003;
+      font-weight: 800;
+      font-size: 0.78rem;
+      display: grid;
+      place-items: center;
+      border: 2px solid rgba(8, 9, 14, 0.92);
+    }
+
+    .action-btn {
+      background: linear-gradient(145deg, var(--gold-2), var(--gold));
+      color: #1f1402;
+      border-color: rgba(255, 189, 89, 0.92);
+      font-weight: 800;
+    }
+
+    .controls-section .action-btn:hover {
+      background: linear-gradient(145deg, #ffbd59, #ffbd59);
+      color: #1f1706;
+      box-shadow:
+        0 0 0 1px rgba(255, 189, 89, 0.38),
+        0 0 16px rgba(255, 189, 89, 0.36),
+        0 0 28px rgba(255, 189, 89, 0.26),
+        inset 0 0 12px rgba(255, 236, 179, 0.22);
+    }
+
+    .search-row {
+      display: grid;
+      grid-template-columns: 1fr auto;
+      gap: 10px;
+      margin-bottom: 16px;
+      align-items: stretch;
+    }
+
+    .search-row .search-input {
+      border: 1px solid rgba(236, 243, 255, 0.26);
+      border-radius: 10px;
+      background: rgba(13, 18, 31, 0.9);
+      overflow: hidden;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+    }
+
+    .search-row .search-input:hover,
+    .search-row .search-input:focus-within {
+      background: rgba(12, 18, 31, 0.88);
+      box-shadow: var(--glow-control);
+    }
+
+    .search-row input {
+      border: 0;
+      background: transparent;
+      height: 42px;
+      padding: 0 12px;
+      font-family: inherit;
+      font-size: 0.9rem;
+      color: #edf3ff;
+      width: 100%;
+    }
+
+    .search-row input::placeholder {
+      color: #8d96ab;
+    }
+
+    .search-row input:focus {
+      outline: none;
+    }
+
+    .cards {
+      display: grid;
+      gap: 14px;
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+
+    .card {
+      border: 0;
+      border-radius: 14px;
+      overflow: hidden;
+      background: var(--glass-card-bg);
+      border: 1px solid var(--glass-card-border);
+      box-shadow: var(--glass-card-shadow);
+      backdrop-filter: blur(20px) saturate(145%);
+      -webkit-backdrop-filter: blur(20px) saturate(145%);
+      transition: transform 0.22s ease, box-shadow 0.22s ease, filter 0.22s ease;
+      transform-origin: center;
+      will-change: transform;
+      position: relative;
+      isolation: isolate;
+    }
+
+    .card::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: none;
+      pointer-events: none;
+      z-index: 1;
+    }
+
+    .card::after {
+      content: "";
+      position: absolute;
+      inset: -1px;
+      border-radius: inherit;
+      pointer-events: none;
+      z-index: 1;
+      box-shadow: inset 0 0 0 1px rgba(255, 255, 255, 0.06);
+    }
+
+    .card:hover {
+      transform: translateY(-4px) scale(1.012);
+      box-shadow:
+        0 20px 36px rgba(0, 0, 0, 0.44),
+        0 0 0 1px rgba(46, 20, 91, 0.55),
+        0 0 0 4px rgba(46, 20, 91, 0.24),
+        0 0 18px rgba(46, 20, 91, 0.48),
+        0 0 30px rgba(134, 182, 255, 0.24),
+        inset 0 0 12px rgba(191, 214, 255, 0.12);
+      filter: saturate(1.04);
+    }
+
+    .media {
+      min-height: 205px;
+      background-size: cover;
+      background-position: center;
+      padding: 12px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      position: relative;
+      z-index: 2;
+    }
+
+    .media::after {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background:
+        linear-gradient(0deg, rgba(16, 22, 34, 0.28), rgba(16, 22, 34, 0.28)),
+        linear-gradient(180deg, rgba(8, 11, 18, 0.2) 0%, rgba(10, 13, 21, 0.56) 100%),
+        radial-gradient(circle at 70% 8%, rgba(156, 189, 236, 0.1), transparent 43%),
+        radial-gradient(circle at 8% 90%, rgba(46, 20, 91, 0.14), transparent 48%);
+      pointer-events: none;
+    }
+
+    .media > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .status {
+      align-self: flex-start;
+      border-radius: 999px;
+      font-size: clamp(0.78rem, 0.75vw, 0.9rem);
+      font-weight: 800;
+      padding: 6px 12px;
+      line-height: 1;
+    }
+
+    .status.status-published {
+      background: rgba(46, 20, 91, 0.96);
+      color: var(--lime);
+      border: 1px solid #2e145b;
+      box-shadow: 0 4px 12px rgba(46, 20, 91, 0.34);
+    }
+
+    .media-title h2 {
+      font-size: clamp(1rem, 1.2vw, 1.35rem);
+      line-height: 1.12;
+      margin-bottom: 4px;
+      color: #f6f8ff;
+    }
+
+    .media-title p {
+      font-size: clamp(0.82rem, 0.84vw, 0.94rem);
+      color: rgba(232, 238, 249, 0.9);
+    }
+
+    .body {
+      padding: 12px 12px 10px;
+      display: grid;
+      gap: 7px;
+      position: relative;
+      z-index: 2;
+      background: var(--glass-card-bg);
+      backdrop-filter: blur(12px) saturate(132%);
+      -webkit-backdrop-filter: blur(12px) saturate(132%);
+    }
+
+    .body::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: none;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .body > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .chips {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .chip {
+      background: transparent;
+      color: var(--lime);
+      border: 1px solid #23885a;
+      border-radius: 6px;
+      min-height: 28px;
+      padding: 0 10px;
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+      line-height: 1;
+    }
+
+    .module-title {
+      font-size: clamp(0.95rem, 1vw, 1.08rem);
+      font-weight: 400;
+      line-height: 1.35;
+      min-height: 0;
+      color: #eaf0fd;
+      white-space: nowrap;
+      overflow: hidden;
+      text-overflow: ellipsis;
+    }
+
+    .module-desc {
+      color: #aeb7cb;
+      font-size: 0.88rem;
+      font-weight: 400;
+      line-height: 1.42;
+      min-height: 0;
+    }
+
+    .stats {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 10px;
+      padding-top: 0;
+    }
+
+    .stat {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 10px;
+      min-height: 44px;
+    }
+
+    .icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #190d37;
+      border: 1px solid var(--gold);
+      color: #ffbd59;
+      display: grid;
+      place-items: center;
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 189, 89, 0.22),
+        0 0 16px rgba(46, 20, 91, 0.2);
+    }
+
+    .icon svg {
+      width: 19px;
+      height: 19px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2.35;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .stat strong {
+      display: block;
+      font-size: clamp(0.95rem, 0.86vw, 1.1rem);
+      line-height: 1.1;
+      color: #f0f4ff;
+    }
+
+    .stat span {
+      color: #a6b0c6;
+      font-size: 0.83rem;
+      font-weight: 600;
+    }
+
+    .media.a {
+      background-image: url("https://images.unsplash.com/photo-1541186877-bb5a745edde5?auto=format&fit=crop&w=1400&q=80");
+    }
+
+    .media.b,
+    .media.c {
+      background-image: url("https://images.unsplash.com/photo-1633412802994-5c058f151b66?auto=format&fit=crop&w=1400&q=80");
+    }
+
+    .ds-section {
+      padding: 18px;
+      overflow: visible;
+    }
+
+    .ds-head {
+      margin-bottom: 14px;
+    }
+
+    .ds-head h2 {
+      font-size: clamp(1.1rem, 1.25vw, 1.45rem);
+      color: #f1e2b9;
+      line-height: 1.2;
+      margin-bottom: 4px;
+    }
+
+    .ds-head p {
+      color: #b8c2d8;
+      font-size: 0.9rem;
+    }
+
+    .ds-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 14px;
+    }
+
+    .ds-panel {
+      border: 1px solid var(--glass-card-border);
+      border-radius: 12px;
+      background: var(--glass-card-bg);
+      box-shadow: var(--glass-card-shadow);
+      backdrop-filter: blur(20px) saturate(145%);
+      -webkit-backdrop-filter: blur(20px) saturate(145%);
+      padding: 14px;
+      position: relative;
+      overflow: visible;
+      isolation: isolate;
+    }
+
+    .ds-panel::before {
+      content: "";
+      position: absolute;
+      inset: 0;
+      background: none;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .ds-panel > * {
+      position: relative;
+      z-index: 1;
+    }
+
+    .ds-panel h3 {
+      font-size: 1rem;
+      color: #eef3ff;
+      margin-bottom: 10px;
+    }
+
+    .ds-caption {
+      margin-top: 10px;
+      color: #99a6c0;
+      font-size: 0.8rem;
+      line-height: 1.4;
+    }
+
+    .ds-color-grid {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 10px;
+    }
+
+    .ds-color {
+      border: 1px solid var(--glass-card-border);
+      border-radius: 10px;
+      overflow: hidden;
+      background: var(--glass-card-bg);
+      box-shadow: var(--glass-card-shadow);
+      backdrop-filter: blur(20px) saturate(145%);
+      -webkit-backdrop-filter: blur(20px) saturate(145%);
+    }
+
+    .ds-color-swatch {
+      height: 28px;
+      border-bottom: 1px solid rgba(236, 243, 255, 0.2);
+    }
+
+    .ds-color-meta {
+      display: grid;
+      gap: 2px;
+      padding: 8px;
+    }
+
+    .ds-color-meta strong {
+      font-size: 0.8rem;
+      color: #edf2ff;
+      line-height: 1.1;
+    }
+
+    .ds-color-meta span {
+      font-size: 0.72rem;
+      color: #a7b2ca;
+      line-height: 1.2;
+      word-break: break-word;
+    }
+
+    .ds-fields {
+      display: grid;
+      gap: 10px;
+    }
+
+    .ds-field {
+      display: grid;
+      gap: 6px;
+    }
+
+    .ds-label {
+      color: #c7d2ea;
+      font-size: 0.79rem;
+      font-weight: 700;
+      letter-spacing: 0.01em;
+    }
+
+    .ds-help {
+      color: #9fa9bf;
+      font-size: 0.75rem;
+    }
+
+    .ds-input,
+    .ds-select,
+    .ds-textarea {
+      width: 100%;
+      border-radius: 10px;
+      border: 1px solid rgba(236, 243, 255, 0.24);
+      background: rgba(13, 18, 31, 0.9);
+      color: #edf3ff;
+      font-family: inherit;
+      font-size: 0.9rem;
+      transition: border-color 0.18s ease, box-shadow 0.18s ease, background-color 0.18s ease;
+    }
+
+    .ds-input,
+    .ds-select {
+      min-height: 42px;
+      padding: 0 12px;
+    }
+
+    .ds-textarea {
+      min-height: 96px;
+      padding: 10px 12px;
+      resize: vertical;
+      line-height: 1.4;
+    }
+
+    .ds-input::placeholder,
+    .ds-textarea::placeholder {
+      color: #8e9ab4;
+    }
+
+    .ds-select {
+      appearance: none;
+      background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='10' height='7' viewBox='0 0 10 7'%3E%3Cpath d='M1 1l4 4 4-4' fill='none' stroke='%23ffbd59' stroke-width='1.8' stroke-linecap='round' stroke-linejoin='round'/%3E%3C/svg%3E");
+      background-position: calc(100% - 14px) 50%;
+      background-size: 10px 7px;
+      background-repeat: no-repeat;
+      padding-right: 36px;
+    }
+
+    .ds-input:hover,
+    .ds-select:hover,
+    .ds-textarea:hover {
+      background: rgba(12, 18, 31, 0.88);
+      box-shadow: var(--glow-control);
+    }
+
+    .ds-input:focus,
+    .ds-select:focus,
+    .ds-textarea:focus {
+      outline: none;
+      border-color: rgba(236, 243, 255, 0.72);
+      box-shadow: var(--glow-control);
+      background: rgba(12, 18, 31, 0.88);
+    }
+
+    .ds-field.is-error .ds-input,
+    .ds-field.is-error .ds-textarea,
+    .ds-field.is-error .ds-select {
+      border-color: rgba(242, 107, 122, 0.88);
+    }
+
+    .ds-error {
+      color: #f495a0;
+      font-size: 0.75rem;
+      font-weight: 600;
+    }
+
+    .ds-btn-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      align-items: center;
+    }
+
+    .ds-btn {
+      min-height: 42px;
+      border-radius: 10px;
+      padding: 0 14px;
+      border: 1px solid rgba(236, 243, 255, 0.24);
+      background: rgba(13, 18, 31, 0.9);
+      color: #edf3ff;
+      font-family: inherit;
+      font-size: 0.9rem;
+      font-weight: 700;
+      cursor: pointer;
+      transition: border-color 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease, transform 0.12s ease;
+    }
+
+    .ds-btn:hover {
+      background: rgba(12, 18, 31, 0.88);
+      box-shadow: var(--glow-control);
+    }
+
+    .ds-btn:active {
+      transform: translateY(1px);
+    }
+
+    .ds-btn:focus-visible {
+      outline: none;
+      box-shadow: var(--glow-control);
+    }
+
+    .ds-btn:disabled {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
+
+    .ds-btn-primary {
+      border-color: rgba(255, 189, 89, 0.92);
+      background: linear-gradient(145deg, #ffbd59, #ffbd59);
+      color: #1f1300;
+    }
+
+    .ds-btn-primary:hover {
+      background: linear-gradient(145deg, #ffbd59, #ffbd59);
+      box-shadow:
+        0 0 0 1px rgba(255, 189, 89, 0.38),
+        0 0 18px rgba(255, 189, 89, 0.38),
+        0 0 30px rgba(255, 189, 89, 0.24),
+        inset 0 0 12px rgba(255, 236, 179, 0.22);
+    }
+
+    .ds-btn-danger {
+      border-color: rgba(242, 107, 122, 0.56);
+      background: rgba(90, 28, 40, 0.48);
+      color: #ffd3d8;
+    }
+
+    .ds-btn-danger:hover {
+      background: rgba(90, 28, 40, 0.48);
+      box-shadow:
+        0 0 0 1px rgba(242, 107, 122, 0.3),
+        0 0 16px rgba(242, 107, 122, 0.28),
+        inset 0 0 10px rgba(242, 107, 122, 0.12);
+    }
+
+    .ds-upload-btn {
+      width: 120px;
+      height: 120px;
+      border-radius: 12px;
+      border: 2px dashed rgba(236, 243, 255, 0.4);
+      background: rgba(13, 18, 31, 0.9);
+      color: #c9d4ea;
+      display: inline-grid;
+      place-items: center;
+      text-align: center;
+      font-family: inherit;
+      font-size: 0.82rem;
+      font-weight: 700;
+      line-height: 1.25;
+      padding: 10px;
+      cursor: pointer;
+      transition: border-color 0.18s ease, color 0.18s ease, background-color 0.18s ease, box-shadow 0.18s ease, transform 0.12s ease;
+    }
+
+    .ds-upload-btn:hover {
+      transform: translateY(-1px);
+    }
+
+    .ds-upload-btn:focus-visible {
+      outline: none;
+      box-shadow: var(--glow-control);
+    }
+
+    .ds-upload-btn-purple:hover {
+      border-color: #2e145b;
+      color: #d8c7ff;
+      background: rgba(13, 18, 31, 0.9);
+      box-shadow: var(--glow-control);
+    }
+
+    .ds-pill {
+      min-height: 40px;
+      border-radius: 10px;
+      padding: 0 14px;
+      border: 1px solid rgba(236, 243, 255, 0.24);
+      background: rgba(13, 18, 31, 0.9);
+      color: #c7d2e8;
+      font-weight: 700;
+      cursor: pointer;
+      transition: background-color 0.16s ease, color 0.16s ease, border-color 0.16s ease, box-shadow 0.16s ease;
+    }
+
+    .ds-pill:hover {
+      color: #f0f4ff;
+      box-shadow:
+        0 0 0 1px rgba(134, 182, 255, 0.24),
+        0 0 14px rgba(134, 182, 255, 0.2),
+        inset 0 0 10px rgba(191, 214, 255, 0.1);
+    }
+
+    .ds-pill.is-selected {
+      background: rgba(46, 20, 91, 0.18);
+      color: #d8c7ff;
+      border-color: #2e145b;
+      box-shadow:
+        inset 0 0 0 1px rgba(46, 20, 91, 0.45),
+        0 0 14px rgba(46, 20, 91, 0.32),
+        0 0 24px rgba(46, 20, 91, 0.18);
+    }
+
+    .ds-chip-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+    }
+
+    .ds-chip {
+      border: 1px solid #23885a;
+      background: transparent;
+      color: #8fdd59;
+      border-radius: 6px;
+      min-height: 28px;
+      padding: 0 10px;
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+
+    .ds-badge-row {
+      display: flex;
+      gap: 8px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin-top: 10px;
+    }
+
+    .ds-badge {
+      border-radius: 999px;
+      min-height: 30px;
+      padding: 0 12px;
+      display: inline-flex;
+      align-items: center;
+      font-size: 0.82rem;
+      font-weight: 800;
+      border: 1px solid transparent;
+    }
+
+    .ds-badge-published {
+      background: rgba(46, 20, 91, 0.96);
+      color: #8fdd59;
+      border-color: #2e145b;
+      box-shadow: 0 4px 12px rgba(46, 20, 91, 0.34);
+    }
+
+    .ds-badge-info {
+      background: rgba(134, 182, 255, 0.18);
+      color: #d7e8ff;
+      border-color: rgba(134, 182, 255, 0.42);
+    }
+
+    .ds-icon-row {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+      margin-top: 10px;
+      align-items: center;
+    }
+
+    .ds-icon {
+      width: 40px;
+      height: 40px;
+      border-radius: 50%;
+      background: #190d37;
+      border: 1px solid #ffbd59;
+      color: #ffbd59;
+      display: inline-grid;
+      place-items: center;
+      box-shadow:
+        inset 0 0 0 1px rgba(255, 189, 89, 0.22),
+        0 0 16px rgba(46, 20, 91, 0.2);
+    }
+
+    .ds-icon svg {
+      width: 18px;
+      height: 18px;
+      stroke: currentColor;
+      fill: none;
+      stroke-width: 2.2;
+      stroke-linecap: round;
+      stroke-linejoin: round;
+    }
+
+    .ds-dropdown {
+      position: relative;
+      width: min(360px, 100%);
+      z-index: 2;
+    }
+
+    .ds-dropdown.is-open {
+      z-index: 9;
+    }
+
+    .ds-dropdown-trigger {
+      width: 100%;
+      justify-content: space-between;
+      display: inline-flex;
+      align-items: center;
+    }
+
+    .ds-dropdown-trigger:hover {
+      box-shadow: var(--glow-control);
+    }
+
+    .ds-dropdown-trigger:focus-visible {
+      outline: none;
+      border-color: rgba(236, 243, 255, 0.72);
+      box-shadow: var(--glow-control);
+    }
+
+    .ds-caret {
+      width: 8px;
+      height: 8px;
+      border-right: 2px solid #ffbd59;
+      border-bottom: 2px solid #ffbd59;
+      transform: rotate(45deg) translateY(-1px);
+      transition: transform 0.16s ease;
+      flex: 0 0 auto;
+    }
+
+    .ds-dropdown.is-open .ds-caret {
+      transform: rotate(-135deg) translateY(-1px);
+    }
+
+    .ds-menu {
+      position: absolute;
+      top: calc(100% + 8px);
+      left: 0;
+      right: 0;
+      padding: 6px;
+      border-radius: 10px;
+      border: 1px solid rgba(236, 243, 255, 0.55);
+      background: rgba(9, 13, 24, 0.98);
+      box-shadow:
+        0 12px 28px rgba(0, 0, 0, 0.44),
+        0 0 0 1px rgba(236, 243, 255, 0.12),
+        0 0 20px rgba(46, 20, 91, 0.2);
+      backdrop-filter: blur(16px) saturate(145%);
+      -webkit-backdrop-filter: blur(16px) saturate(145%);
+      z-index: 6;
+    }
+
+    .ds-menu[hidden] {
+      display: none;
+    }
+
+    .ds-menu-item {
+      width: 100%;
+      min-height: 38px;
+      border: 0;
+      border-radius: 7px;
+      background: transparent;
+      color: #c3ccde;
+      text-align: left;
+      padding: 0 10px;
+      font-family: inherit;
+      font-size: 0.84rem;
+      font-weight: 600;
+      cursor: pointer;
+      transition: background-color 0.14s ease, color 0.14s ease;
+    }
+
+    .ds-menu-item:hover {
+      background: rgba(191, 214, 255, 0.08);
+      color: #f2f6ff;
+      box-shadow:
+        inset 0 0 0 1px rgba(134, 182, 255, 0.2),
+        0 0 10px rgba(134, 182, 255, 0.18);
+    }
+
+    .ds-menu-item.is-selected {
+      background: rgba(46, 20, 91, 0.18);
+      color: #d8c7ff;
+      box-shadow: inset 0 0 0 1px rgba(46, 20, 91, 0.4);
+    }
+
+    .ds-menu-sep {
+      height: 1px;
+      margin: 6px 0;
+      background: rgba(236, 243, 255, 0.2);
+    }
+
+    @media (max-width: 1200px) {
+      .cards {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+
+      .sort-select {
+        min-width: 280px;
+      }
+    }
+
+    @media (max-width: 920px) {
+      .topbar-inner {
+        flex-wrap: wrap;
+      }
+
+      .nav-links {
+        order: 3;
+        width: 100%;
+        justify-content: space-between;
+        gap: 12px;
+      }
+
+      .sort-select {
+        width: 100%;
+      }
+
+      .toolbar {
+        grid-template-columns: 1fr;
+        gap: 10px;
+      }
+
+      .action-btn,
+      .pill-btn,
+      .sort-select {
+        width: 100%;
+      }
+
+      .toolbar-left,
+      .toolbar-center,
+      .toolbar-right {
+        justify-self: stretch;
+      }
+
+      .toolbar-center,
+      .toolbar-right {
+        justify-content: flex-start;
+      }
+    }
+
+    @media (max-width: 760px) {
+      .page {
+        padding: 20px 16px 76px;
+      }
+
+      .topbar-inner {
+        padding: 12px;
+      }
+
+      .brand {
+        min-width: 0;
+      }
+
+      .logo {
+        width: 42px;
+        height: 42px;
+      }
+
+      .avatar {
+        width: 40px;
+        height: 40px;
+      }
+
+      .toolbar,
+      .cards {
+        grid-template-columns: 1fr;
+      }
+
+      .search-row {
+        grid-template-columns: 1fr;
+      }
+
+      .search-row button {
+        height: 46px;
+      }
+
+      .media {
+        min-height: 180px;
+      }
+
+      .module-desc {
+        min-height: 0;
+      }
+
+      .ds-grid {
+        grid-template-columns: 1fr;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="topbar-inner">
+      <div class="brand">
+        <div class="logo">X</div>
+        <p class="hello">Good afternoon,<br />Vaishnavi</p>
+      </div>
+
+      <nav class="nav-links" aria-label="Main">
+        <a class="active" href="#">Trainings</a>
+        <a href="#">Users</a>
+        <a href="#">Organizations</a>
+        <a href="#">Licenses</a>
+        <a href="#">Sessions</a>
+      </nav>
+
+      <div class="top-right">
+        <button class="role-btn" type="button">Superuser</button>
+        <div class="avatar">VS</div>
+      </div>
+    </div>
+  </header>
+
+  <main class="page">
+    <section class="section controls-section">
+      <h1>Training Management</h1>
+
+      <section class="toolbar" aria-label="Filters and actions">
+        <div class="toolbar-left">
+          <select class="sort-select" aria-label="Sort">
+            <option>Updated (Newest First)</option>
+            <option>Updated (Oldest First)</option>
+          </select>
+        </div>
+
+        <div class="toolbar-center">
+          <button class="pill-btn state-btn" type="button">All Modules</button>
+          <button class="pill-btn state-btn active is-selected" type="button">Published</button>
+          <button class="pill-btn state-btn" type="button">Draft</button>
+          <button class="pill-btn state-btn" type="button">Archived</button>
+          <button class="pill-btn filter-btn" type="button">
+            Filters
+            <span class="count">1</span>
+          </button>
+        </div>
+
+        <div class="toolbar-right">
+          <button class="action-btn" type="button">AI Generate</button>
+          <button class="action-btn" type="button">New</button>
+        </div>
+      </section>
+
+      <section class="search-row" aria-label="Search modules">
+        <div class="search-input">
+          <input type="text" placeholder="Search your modules..." />
+        </div>
+        <button type="button">Clear</button>
+      </section>
+    </section>
+
+    <section class="cards">
+      <article class="card">
+        <div class="media a">
+          <span class="status status-published">Published</span>
+          <div class="media-title">
+            <h2>ISS Space Station</h2>
+            <p>ISS Space Station</p>
+          </div>
+        </div>
+        <div class="body">
+          <div class="chips">
+            <span class="chip">Development</span>
+            <span class="chip">tag-2 +1</span>
+          </div>
+          <p class="module-title">ISS Space Station</p>
+          <p class="module-desc"></p>
+          <div class="stats">
+            <div class="stat">
+              <div class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="8" r="3"/>
+                  <path d="M5 19v-1a7 7 0 0 1 14 0v1"/>
+                </svg>
+              </div>
+              <div><strong>1</strong><span>Learners</span></div>
+            </div>
+            <div class="stat">
+              <div class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="8" r="3"/>
+                  <path d="M5 19v-1a7 7 0 0 1 14 0v1"/>
+                </svg>
+              </div>
+              <div><strong>0</strong><span>Session</span></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="media b">
+          <span class="status status-published">Published</span>
+          <div class="media-title">
+            <h2>Space Shuttle Endeavour Module</h2>
+            <p>Space Shuttle Endeavour Module</p>
+          </div>
+        </div>
+        <div class="body">
+          <div class="chips">
+            <span class="chip">Design</span>
+            <span class="chip">No tag</span>
+          </div>
+          <p class="module-title">Space Shuttle Endeavour Module</p>
+          <p class="module-desc"></p>
+          <div class="stats">
+            <div class="stat">
+              <div class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="8" r="3"/>
+                  <path d="M5 19v-1a7 7 0 0 1 14 0v1"/>
+                </svg>
+              </div>
+              <div><strong>0</strong><span>Learners</span></div>
+            </div>
+            <div class="stat">
+              <div class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="8" r="3"/>
+                  <path d="M5 19v-1a7 7 0 0 1 14 0v1"/>
+                </svg>
+              </div>
+              <div><strong>0</strong><span>Session</span></div>
+            </div>
+          </div>
+        </div>
+      </article>
+
+      <article class="card">
+        <div class="media c">
+          <span class="status status-published">Published</span>
+          <div class="media-title">
+            <h2>Sanitation SOP Development and Implementation Training</h2>
+            <p></p>
+          </div>
+        </div>
+        <div class="body">
+          <div class="chips">
+            <span class="chip">Development</span>
+            <span class="chip">No tag</span>
+          </div>
+          <p class="module-title">AI-generated training module: Sanitation SOP Development and Implementation Training</p>
+          <p class="module-desc"></p>
+          <div class="stats">
+            <div class="stat">
+              <div class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="8" r="3"/>
+                  <path d="M5 19v-1a7 7 0 0 1 14 0v1"/>
+                </svg>
+              </div>
+              <div><strong>4</strong><span>Learners</span></div>
+            </div>
+            <div class="stat">
+              <div class="icon" aria-hidden="true">
+                <svg viewBox="0 0 24 24">
+                  <circle cx="12" cy="8" r="3"/>
+                  <path d="M5 19v-1a7 7 0 0 1 14 0v1"/>
+                </svg>
+              </div>
+              <div><strong>0</strong><span>Session</span></div>
+            </div>
+          </div>
+        </div>
+      </article>
+    </section>
+
+    <section class="section ds-section" aria-labelledby="design-system-heading">
+      <header class="ds-head">
+        <h2 id="design-system-heading">Enterprise UI/UX System Playground</h2>
+        <p>Single-file interactive reference for approved colors, inputs, buttons, dropdowns, pills, badges, and hover/focus behavior.</p>
+      </header>
+
+      <div class="ds-grid">
+        <article class="ds-panel">
+          <h3>Allowed Color Tokens</h3>
+          <div class="ds-color-grid">
+            <div class="ds-color">
+              <div class="ds-color-swatch" style="background:#0a0d14"></div>
+              <div class="ds-color-meta"><strong>Canvas</strong><span>#0A0D14</span></div>
+            </div>
+            <div class="ds-color">
+              <div class="ds-color-swatch" style="background:#262a35"></div>
+              <div class="ds-color-meta"><strong>Glass Surface</strong><span>#262A35</span></div>
+            </div>
+            <div class="ds-color">
+              <div class="ds-color-swatch" style="background:#2e145b"></div>
+              <div class="ds-color-meta"><strong>Brand Purple</strong><span>#2E145B</span></div>
+            </div>
+            <div class="ds-color">
+              <div class="ds-color-swatch" style="background:#8fdd59"></div>
+              <div class="ds-color-meta"><strong>Brand Lime</strong><span>#8FDD59</span></div>
+            </div>
+            <div class="ds-color">
+              <div class="ds-color-swatch" style="background:#ffbd59"></div>
+              <div class="ds-color-meta"><strong>Brand Gold</strong><span>#FFBD59</span></div>
+            </div>
+            <div class="ds-color">
+              <div class="ds-color-swatch" style="background:#f26b7a"></div>
+              <div class="ds-color-meta"><strong>Danger</strong><span>#F26B7A</span></div>
+            </div>
+          </div>
+          <p class="ds-caption">Use only tokenized palette values for production UI to preserve consistency and accessibility.</p>
+        </article>
+
+        <article class="ds-panel">
+          <h3>Inputs and Field States</h3>
+          <div class="ds-fields">
+            <label class="ds-field">
+              <span class="ds-label">Module Name</span>
+              <input class="ds-input" type="text" placeholder="Enter module name" />
+              <span class="ds-help">Default, hover, and focus states are built in.</span>
+            </label>
+            <label class="ds-field">
+              <span class="ds-label">Category</span>
+              <select class="ds-select" aria-label="Category">
+                <option>Development</option>
+                <option>Design</option>
+                <option>Compliance</option>
+              </select>
+            </label>
+            <label class="ds-field is-error">
+              <span class="ds-label">Owner Email</span>
+              <input class="ds-input" type="email" value="invalid-email" />
+              <span class="ds-error">Please enter a valid work email address.</span>
+            </label>
+            <label class="ds-field">
+              <span class="ds-label">Description</span>
+              <textarea class="ds-textarea" placeholder="Describe training objectives, audience, and prerequisites..."></textarea>
+            </label>
+          </div>
+        </article>
+
+        <article class="ds-panel">
+          <h3>Buttons and Pills</h3>
+          <div class="ds-btn-row">
+            <button class="ds-btn ds-btn-primary" type="button">Primary Action</button>
+            <button class="ds-btn" type="button">Default Button</button>
+            <button class="ds-btn ds-btn-danger" type="button">Danger</button>
+            <button class="ds-btn" type="button" disabled>Disabled</button>
+          </div>
+          <div class="ds-btn-row" style="margin-top:10px">
+            <button class="ds-pill" type="button" aria-pressed="false">All</button>
+            <button class="ds-pill is-selected" type="button" aria-pressed="true">Published</button>
+            <button class="ds-pill" type="button" aria-pressed="false">Draft</button>
+            <button class="ds-pill" type="button" aria-pressed="false">Archived</button>
+          </div>
+          <div class="ds-btn-row" style="margin-top:10px">
+            <button class="ds-upload-btn ds-upload-btn-purple" type="button">Upload<br />Purple Hover</button>
+          </div>
+          <p class="ds-caption">Pills are single-select controls. Selected state uses purple surface + lilac text.</p>
+        </article>
+
+        <article class="ds-panel">
+          <h3>Dropdown Menu Items</h3>
+          <div class="ds-dropdown" data-dropdown>
+            <button class="ds-btn ds-dropdown-trigger" type="button" aria-expanded="false" aria-haspopup="menu">
+              <span data-dropdown-label>Updated (Newest First)</span>
+              <span class="ds-caret" aria-hidden="true"></span>
+            </button>
+            <div class="ds-menu" role="menu" hidden>
+              <button class="ds-menu-item is-selected" type="button" role="menuitem">Updated (Newest First)</button>
+              <button class="ds-menu-item" type="button" role="menuitem">Updated (Oldest First)</button>
+              <button class="ds-menu-item" type="button" role="menuitem">Created (Newest First)</button>
+              <div class="ds-menu-sep"></div>
+              <button class="ds-menu-item" type="button" role="menuitem">A-Z</button>
+              <button class="ds-menu-item" type="button" role="menuitem">Z-A</button>
+            </div>
+          </div>
+          <div class="ds-badge-row">
+            <span class="ds-badge ds-badge-published">Published</span>
+            <span class="ds-badge ds-badge-info">Internal</span>
+          </div>
+          <div class="ds-chip-row">
+            <span class="ds-chip">Development</span>
+            <span class="ds-chip">XR Safety</span>
+            <span class="ds-chip">v2.3</span>
+          </div>
+          <h4 class="ds-label" style="margin-top:10px">Icon Style</h4>
+          <div class="ds-icon-row" aria-label="Icon style reference">
+            <span class="ds-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <circle cx="12" cy="8" r="3"></circle>
+                <path d="M5 19v-1a7 7 0 0 1 14 0v1"></path>
+              </svg>
+            </span>
+            <span class="ds-icon" aria-hidden="true">
+              <svg viewBox="0 0 24 24">
+                <path d="M12 3v18"></path>
+                <path d="M3 12h18"></path>
+              </svg>
+            </span>
+          </div>
+          <p class="ds-caption">Hover menu items to preview state changes. Click an option to update selection.</p>
+        </article>
+      </div>
+    </section>
+  </main>
+
+  <script>
+    (function () {
+      var controlsSection = document.querySelector(".controls-section");
+      if (!controlsSection) return;
+
+      var stateButtons = controlsSection.querySelectorAll(".state-btn");
+      var allButtons = controlsSection.querySelectorAll("button");
+
+      allButtons.forEach(function (button) {
+        button.setAttribute("aria-pressed", button.classList.contains("is-selected") ? "true" : "false");
+      });
+
+      stateButtons.forEach(function (button) {
+        button.addEventListener("click", function () {
+          stateButtons.forEach(function (item) {
+            item.classList.remove("is-selected", "active");
+            item.setAttribute("aria-pressed", "false");
+          });
+          button.classList.add("is-selected", "active");
+          button.setAttribute("aria-pressed", "true");
+        });
+      });
+
+      var dsPills = document.querySelectorAll(".ds-pill");
+      dsPills.forEach(function (pill) {
+        pill.addEventListener("click", function () {
+          dsPills.forEach(function (item) {
+            item.classList.remove("is-selected");
+            item.setAttribute("aria-pressed", "false");
+          });
+          pill.classList.add("is-selected");
+          pill.setAttribute("aria-pressed", "true");
+        });
+      });
+
+      var dropdowns = document.querySelectorAll("[data-dropdown]");
+      dropdowns.forEach(function (dropdown) {
+        var trigger = dropdown.querySelector(".ds-dropdown-trigger");
+        var menu = dropdown.querySelector(".ds-menu");
+        var label = dropdown.querySelector("[data-dropdown-label]");
+        if (!trigger || !menu || !label) return;
+
+        trigger.addEventListener("click", function () {
+          var isOpen = !menu.hasAttribute("hidden");
+          if (isOpen) {
+            menu.setAttribute("hidden", "");
+            trigger.setAttribute("aria-expanded", "false");
+            dropdown.classList.remove("is-open");
+          } else {
+            menu.removeAttribute("hidden");
+            trigger.setAttribute("aria-expanded", "true");
+            dropdown.classList.add("is-open");
+          }
+        });
+
+        menu.querySelectorAll(".ds-menu-item").forEach(function (item) {
+          item.addEventListener("click", function () {
+            menu.querySelectorAll(".ds-menu-item").forEach(function (menuItem) {
+              menuItem.classList.remove("is-selected");
+            });
+            item.classList.add("is-selected");
+            label.textContent = item.textContent;
+            menu.setAttribute("hidden", "");
+            trigger.setAttribute("aria-expanded", "false");
+            dropdown.classList.remove("is-open");
+          });
+        });
+      });
+
+      document.addEventListener("click", function (event) {
+        document.querySelectorAll("[data-dropdown]").forEach(function (dropdown) {
+          if (dropdown.contains(event.target)) return;
+          var trigger = dropdown.querySelector(".ds-dropdown-trigger");
+          var menu = dropdown.querySelector(".ds-menu");
+          if (!trigger || !menu) return;
+          menu.setAttribute("hidden", "");
+          trigger.setAttribute("aria-expanded", "false");
+          dropdown.classList.remove("is-open");
+        });
+      });
+    })();
+  </script>
+</body>
+</html>
