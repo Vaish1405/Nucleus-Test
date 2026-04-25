@@ -552,17 +552,31 @@
     }
 
     .chip {
-      background: transparent;
-      color: var(--lime);
-      border: 1px solid #23885a;
-      border-radius: 6px;
-      min-height: 28px;
-      padding: 0 10px;
+      color: #6a2c91;
+      background: linear-gradient(145deg, #f1e7ff 0%, #e7d8ff 100%);
+      border: 1px solid rgba(134, 91, 196, 0.4);
+      border-radius: 999px;
+      min-height: 34px;
+      padding: 0 14px;
       display: inline-flex;
       align-items: center;
-      font-size: 0.8rem;
+      font-size: 0.82rem;
       font-weight: 700;
       line-height: 1;
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.75),
+        0 2px 8px rgba(106, 44, 145, 0.16);
+    }
+
+    .chips .chip:not(:first-child) {
+      background: linear-gradient(145deg, #f7efff 0%, #ecddff 100%);
+      border: 1px solid rgba(134, 91, 196, 0.38);
+      border-radius: 999px;
+      padding: 0 14px 0 18px;
+      clip-path: polygon(12px 0, 100% 0, 100% 100%, 12px 100%, 0 50%);
+      box-shadow:
+        inset 0 1px 0 rgba(255, 255, 255, 0.8),
+        0 2px 8px rgba(106, 44, 145, 0.14);
     }
 
     .module-title {
@@ -834,6 +848,16 @@
     .ds-field.is-error .ds-textarea,
     .ds-field.is-error .ds-select {
       border-color: rgba(242, 107, 122, 0.88);
+    }
+
+    .ds-field.is-error .ds-input:hover,
+    .ds-field.is-error .ds-select:hover,
+    .ds-field.is-error .ds-textarea:hover,
+    .ds-field.is-error .ds-input:focus,
+    .ds-field.is-error .ds-select:focus,
+    .ds-field.is-error .ds-textarea:focus {
+      border-color: rgba(242, 107, 122, 0.88);
+      box-shadow: none;
     }
 
     .ds-error {
@@ -1257,8 +1281,9 @@
       }
     }
   </style>
+  <link rel="stylesheet" href="./nucleus-main-light-theme.css" />
 </head>
-<body>
+<body class="light-theme">
   <header class="topbar">
     <div class="topbar-inner">
       <div class="brand">
@@ -1445,31 +1470,31 @@
           <h3>Allowed Color Tokens</h3>
           <div class="ds-color-grid">
             <div class="ds-color">
-              <div class="ds-color-swatch" style="background:#0a0d14"></div>
-              <div class="ds-color-meta"><strong>Canvas</strong><span>#0A0D14</span></div>
+              <div class="ds-color-swatch" style="background:#ffffff"></div>
+              <div class="ds-color-meta"><strong>Navbar Surface</strong><span>#FFFFFF (95% Opacity)</span></div>
             </div>
             <div class="ds-color">
-              <div class="ds-color-swatch" style="background:#262a35"></div>
-              <div class="ds-color-meta"><strong>Glass Surface</strong><span>#262A35</span></div>
+              <div class="ds-color-swatch" style="background:#6a2c91"></div>
+              <div class="ds-color-meta"><strong>Navbar Accent Border</strong><span>#6A2C91</span></div>
             </div>
             <div class="ds-color">
-              <div class="ds-color-swatch" style="background:#2e145b"></div>
-              <div class="ds-color-meta"><strong>Brand Purple</strong><span>#2E145B</span></div>
+              <div class="ds-color-swatch" style="background:#f3f6fb"></div>
+              <div class="ds-color-meta"><strong>Page Canvas</strong><span>#F3F6FB</span></div>
             </div>
             <div class="ds-color">
-              <div class="ds-color-swatch" style="background:#8fdd59"></div>
-              <div class="ds-color-meta"><strong>Brand Lime</strong><span>#8FDD59</span></div>
+              <div class="ds-color-swatch" style="background:#dbe3ef"></div>
+              <div class="ds-color-meta"><strong>Management Card Border</strong><span>#DBE3EF</span></div>
             </div>
             <div class="ds-color">
               <div class="ds-color-swatch" style="background:#ffbd59"></div>
-              <div class="ds-color-meta"><strong>Brand Gold</strong><span>#FFBD59</span></div>
+              <div class="ds-color-meta"><strong>Primary Gold Accent</strong><span>#FFBD59</span></div>
             </div>
             <div class="ds-color">
-              <div class="ds-color-swatch" style="background:#f26b7a"></div>
-              <div class="ds-color-meta"><strong>Danger</strong><span>#F26B7A</span></div>
+              <div class="ds-color-swatch" style="background:#c6435a"></div>
+              <div class="ds-color-meta"><strong>Danger / Error</strong><span>#C6435A</span></div>
             </div>
           </div>
-          <p class="ds-caption">Use only tokenized palette values for production UI to preserve consistency and accessibility.</p>
+          <p class="ds-caption">These tokens are mapped to the live navbar, Training Management card, and module card system used on this page.</p>
         </article>
 
         <article class="ds-panel">
@@ -1515,9 +1540,9 @@
             <button class="ds-pill" type="button" aria-pressed="false">Archived</button>
           </div>
           <div class="ds-btn-row" style="margin-top:10px">
-            <button class="ds-upload-btn ds-upload-btn-purple" type="button">Upload<br />Purple Hover</button>
+            <button class="ds-upload-btn ds-upload-btn-purple" type="button">Upload<br />Gold Hover</button>
           </div>
-          <p class="ds-caption">Pills are single-select controls. Selected state uses purple surface + lilac text.</p>
+          <p class="ds-caption">Pills are single-select controls. Selected state uses the same gold accent language as the live controls.</p>
         </article>
 
         <article class="ds-panel">
@@ -1538,7 +1563,6 @@
           </div>
           <div class="ds-badge-row">
             <span class="ds-badge ds-badge-published">Published</span>
-            <span class="ds-badge ds-badge-info">Internal</span>
           </div>
           <div class="ds-chip-row">
             <span class="ds-chip">Development</span>
